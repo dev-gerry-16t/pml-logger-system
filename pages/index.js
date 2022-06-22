@@ -172,11 +172,7 @@ export default function Home() {
                 })}
               {isEmpty(dataFetch) === true && (
                 <CenterLog>
-                  <h3>
-                    No se encontraron logs "
-                    {selectTypeLog === 1 ? "warning" : "errors"}" en{" "}
-                    {selectEnvironment}
-                  </h3>
+                  <h3>No se encontraron logs en {selectEnvironment}</h3>
                 </CenterLog>
               )}
             </ContainerLogs>
