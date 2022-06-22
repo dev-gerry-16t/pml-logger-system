@@ -58,7 +58,7 @@ export default function Home() {
   const handlerGetLogsSelect = async (path) => {
     try {
       setLoadApi(true);
-      const response = await fetch(`${window.location.href}/api/${path}`, {
+      const response = await fetch(`${window.location.href}api/${path}`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
@@ -81,7 +81,7 @@ export default function Home() {
   const handlerDeleteLogsSelect = async (path, id) => {
     try {
       setLoadApi(true);
-      await fetch(`${window.location.href}/api/${path}`, {
+      await fetch(`${window.location.href}api/${path}`, {
         method: "PUT",
         body: JSON.stringify({
           _id: id,
