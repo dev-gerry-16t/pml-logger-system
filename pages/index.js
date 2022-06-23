@@ -93,15 +93,13 @@ export default function Home() {
       setLoadApi(false);
     } catch (error) {
       setLoadApi(false);
-
-      console.log("error", error);
     }
   };
 
   return (
-    <MainContainer>
+    <div>
       {loadApi && <LoaderProcess />}
-      <main>
+      <MainContainer>
         <div>
           <h1>LOGS SYSTEM</h1>
         </div>
@@ -160,13 +158,14 @@ export default function Home() {
                       key={row["_id"]}
                       onChangeDelete={async (data) => {
                         const path = `${selectEnvironment}-${
-                          selectTypeLog === 1 ? "warning" : "errors"
+                          selectTypeLog === 1 ? "warnings" : "errors"
                         }`;
                         await handlerDeleteLogsSelect(path, data["_id"]);
                         await handlerGetLogsSelect(path);
                       }}
                       data={row}
                       selectTypeLog={selectTypeLog}
+                      selectEnvironment={selectEnvironment}
                     />
                   );
                 })}
@@ -178,7 +177,7 @@ export default function Home() {
             </ContainerLogs>
           </>
         )}
-      </main>
-    </MainContainer>
+      </MainContainer>
+    </div>
   );
 }

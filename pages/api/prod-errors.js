@@ -13,6 +13,10 @@ export default async function handlerGetViewLogProdErrorSchema(req, res) {
       const body = req.body;
       await ViewProdErrorSchema.find({ _id: body["_id"] }).deleteOne().exec();
       return res.status(200).json({ message: "delete ok", id: body["_id"] });
+    } else if (method === "POST") {
+      const body = req.body;
+      const result = await ViewProdErrorSchema.find({ _id: body["_id"] });
+      return res.status(200).json({ result });
     }
   } catch (error) {
     res.status(500).json({

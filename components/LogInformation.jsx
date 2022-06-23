@@ -65,13 +65,20 @@ const InfoLog = styled.div`
     grid-area: actions;
     display: flex;
     justify-content: center;
+    column-gap: 1em;
     button {
       padding: 1em;
-      border-radius: 5px;
+      border-radius: 10px;
       border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .copy-path-log {
+    }
+    .delete-log {
       background: red;
       color: white;
-      font-weight: bold;
     }
   }
 
@@ -87,8 +94,16 @@ const InfoLog = styled.div`
 `;
 
 const LogInformation = (props) => {
-  const { selectTypeLog, data, onChangeDelete } = props;
-  const [collapseDetail, setCollapseDetail] = useState(true);
+  const {
+    selectTypeLog,
+    data,
+    onChangeDelete,
+    detail = false,
+    selectEnvironment = "",
+  } = props;
+  const [collapseDetail, setCollapseDetail] = useState(
+    detail === false ? true : false
+  );
 
   const handlerParseMessage = (dataInfo) => {
     try {
@@ -99,6 +114,43 @@ const LogInformation = (props) => {
   };
   const messageParse =
     isEmpty(data.message) === false ? handlerParseMessage(data.message) : {};
+
+  // const copyToClipBoard = () => {
+  //   const content = document.getElementById(
+  //     `copy-path-clipboard-${data["_id"]}`
+  //   );
+
+  //   content.select();
+  //   document.execCommand("copy");
+  //   alert("Copied!");
+  // };
+
+  const copiarAlPortapapeles = (text) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand("copy");
+      alert("Copied!");
+    } catch (err) {}
+
+    document.body.removeChild(textArea);
+  };
+
+  const copyTextToClipboard = (num) => {
+    if (!navigator.clipboard) {
+      copiarAlPortapapeles(num);
+      return;
+    }
+    navigator.clipboard.writeText(num).then(
+      () => {
+        alert("Copied!");
+      },
+      (err) => {}
+    );
+  };
 
   return (
     <Logs>
@@ -128,7 +180,7 @@ const LogInformation = (props) => {
               maxWidth: "100%",
               minHeight: "200px",
             }}
-            value={
+            defaultValue={
               isEmpty(messageParse.paramsIn) === false
                 ? JSON.stringify(messageParse.paramsIn, null, 2)
                 : ""
@@ -144,7 +196,7 @@ const LogInformation = (props) => {
                 maxWidth: "100%",
                 minHeight: "200px",
               }}
-              value={
+              defaultValue={
                 isEmpty(messageParse.paramsOut) === false
                   ? JSON.stringify(messageParse.paramsOut, null, 2)
                   : ""
@@ -162,7 +214,7 @@ const LogInformation = (props) => {
                 maxWidth: "100%",
                 minHeight: "200px",
               }}
-              value={
+              defaultValue={
                 isEmpty(messageParse.errorSystem) === false
                   ? JSON.stringify(messageParse.errorSystem, null, 2)
                   : ""
@@ -179,7 +231,7 @@ const LogInformation = (props) => {
                 maxWidth: "100%",
                 minHeight: "200px",
               }}
-              value={
+              defaultValue={
                 isEmpty(messageParse.location) === false
                   ? JSON.stringify(messageParse.location, null, 2)
                   : ""
@@ -188,7 +240,22 @@ const LogInformation = (props) => {
           </p>
         </div>
         <div className="item-5">
+          {detail === false && (
+            <button
+              className="copy-path-log"
+              onClick={() => {
+                copyTextToClipboard(
+                  `${window.location.href}${selectEnvironment}-${
+                    selectTypeLog === 1 ? "warning" : "error"
+                  }/${data["_id"]}`
+                );
+              }}
+            >
+              Copiar Url
+            </button>
+          )}
           <button
+            className="delete-log"
             onClick={() => {
               onChangeDelete(data);
               setCollapseDetail(true);
